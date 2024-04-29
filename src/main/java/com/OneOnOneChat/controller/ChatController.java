@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is irrelevant to this project
+ */
 @Controller
 public class ChatController {
     @Autowired

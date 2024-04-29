@@ -9,9 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupChatRoomRepository extends JpaRepository<GroupChatRoomEntity, Long> {
 
-//    @Query("{'adminIdList': { $in: [ ?0 ] }, 'groupName': ?1}")
-//    Optional<GroupChatRoomEntity> findByAdminIdInAndGroupName(String actingAdminId, String groupName);
-
     Short countById(Long id);
 
     @Query("SELECT COUNT(DISTINCT m) FROM GroupChatRoomEntity g JOIN g.members m WHERE g.id = :groupId")

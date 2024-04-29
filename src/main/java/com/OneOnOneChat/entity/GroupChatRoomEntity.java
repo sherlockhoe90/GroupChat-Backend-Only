@@ -40,7 +40,6 @@ public class GroupChatRoomEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> members = new ArrayList<>();
-    //private List<User> memberIdList;
 
     @ManyToMany
     @JoinTable(
@@ -49,7 +48,6 @@ public class GroupChatRoomEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> admins = new ArrayList<>();
-    //private List<User> adminList;
 
     public List<ChatMessage> getMessages() {
         return messages;

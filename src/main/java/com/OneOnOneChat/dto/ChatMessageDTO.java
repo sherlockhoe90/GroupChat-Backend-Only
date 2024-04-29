@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * This class is irrelevant to this project
+ */
 @Data
 @Builder
 @AllArgsConstructor

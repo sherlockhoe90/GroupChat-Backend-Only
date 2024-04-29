@@ -16,7 +16,6 @@ import java.util.List;
 @Builder
 public class User {
 
-    //@Id
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

@@ -7,7 +7,6 @@ import com.OneOnOneChat.entity.GroupChatRoomEntity;
 import com.OneOnOneChat.entity.User;
 import com.OneOnOneChat.mapper.ChatMessageMapper;
 import com.OneOnOneChat.mapper.GroupMapper;
-import com.OneOnOneChat.notification.ChatNotification;
 import com.OneOnOneChat.service.ChatMessageService;
 import com.OneOnOneChat.service.GroupChatRoomService;
 import jakarta.persistence.EntityExistsException;
@@ -19,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.InstanceNotFoundException;
@@ -55,15 +53,10 @@ public class GroupChatController {
 //        messagingTemplate.convertAndSend("/topic/Example_Group/"+chatMessage.getGroup().getId().toString(), ChatNotification.builder().id(String.valueOf(savedMsg.getId())).senderId(savedMsg.getSender().toString()).recipientId(savedMsg.getRecipient().toString()).content(savedMsg.getContent()).build());
     }
 
-//    @GetMapping("/messages/{senderId}/{recipientId}")
-//    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable("senderId") String senderId,@PathVariable("recipientId") String recipientId){
-////        return ResponseEntity.ok(chatMessageService.findChatMessages(senderId,recipientId));
-//        return ResponseEntity.ok(new ArrayList<>());
-//    }
-
     @PostMapping("/new")
     public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupDTO request) {
-        if (!request.getMemberIdList().containsAll(request.getAdminIdList()) || request.getGroupName().isEmpty() || request.getMemberIdList().isEmpty()) return new ResponseEntity<>(new GroupDTO(), HttpStatus.valueOf(422));
+        if (!request.getMemberIdList().containsAll(request.getAdminIdList()) || request.getGroupName().isEmpty() || request.getMemberIdList().isEmpty())
+            return new ResponseEntity<>(new GroupDTO(), HttpStatus.valueOf(422));
         GroupChatRoomEntity groupChat = groupChatRoomService.createGroup(request.getGroupName(), request.getGroupDescription(),
                 request.getMemberIdList(), request.getAdminIdList().get(0));
         return new ResponseEntity<>(GroupMapper.groupEntityToGroupDTO(groupChat), HttpStatus.CREATED);
@@ -163,16 +156,10 @@ public class GroupChatController {
         }
     }
 
-    /**
-     * @param groupId
-     * @param newGroupName
-     * @param newGroupDescription
-     * @return
-     */
     @PutMapping("/{groupId}")
     public ResponseEntity<GroupDTO> updateGroup(@PathVariable Long groupId,
-                                                 @RequestParam(required = false) String newGroupName,
-                                                 @RequestParam(required = false) String newGroupDescription,
+                                                @RequestParam(required = false) String newGroupName,
+                                                @RequestParam(required = false) String newGroupDescription,
                                                 @RequestBody(required = true) Long actingUserId) {
         try {
             if ((Objects.isNull(newGroupName) && Objects.isNull(newGroupDescription))) throw new IllegalArgumentException();
@@ -188,8 +175,8 @@ public class GroupChatController {
     @GetMapping("/past-participants/{groupId}")
     public ResponseEntity<List<User>> findPastParticipants(@PathVariable Long groupId, @RequestParam int minutes) {
         try {
-        List<User> pastParticipants = groupChatRoomService.pastParticipantsByGroupIdAndTimePeriod(groupId, minutes);
-        return new ResponseEntity<>(pastParticipants, HttpStatus.OK);
+            List<User> pastParticipants = groupChatRoomService.pastParticipantsByGroupIdAndTimePeriod(groupId, minutes);
+            return new ResponseEntity<>(pastParticipants, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
@@ -197,40 +184,4 @@ public class GroupChatController {
     }
 
 
-
-
-//    @PostMapping("/newGroupChat")
-////    @MessageMapping("/newGroupChat")
-//    public boolean processMessage(@RequestBody GroupDTO groupChatDTO){
-//        if (groupChatDTO.getGroupName().isEmpty() || groupChatDTO.getGroupDescription().isEmpty() || groupChatDTO.getAdminIdList().isEmpty() || groupChatDTO.getMemberIdList().isEmpty()) return false;
-//
-//        GroupChatRoomEntity groupChatRoom = GroupChatRoomEntity.builder().groupName(groupChatDTO.getGroupName()).groupDescription(groupChatDTO.getGroupDescription()).admins(groupChatDTO.getAdminIdList()).memberIdList(groupChatDTO.getMemberIdList()).build();
-//        GroupChatRoomEntity savedGrp = groupChatRoomService.createGroupChat(groupChatRoom.getGroupName(), groupChatRoom.getGroupDescription(), groupChatRoom.getAdminIdList().toString(), groupChatRoom.getMembers().toString());
-////        String groupChatId = groupChatRoomService.getGroupChatRoomId(sender, name)
-//        for(User recepientId : groupChatRoom.getMembers()) {
-//            messagingTemplate.convertAndSendToUser(
-//                    recepientId,
-//                    "/queue/messages",
-//                    ChatNotification.builder()
-//                            .id(savedGrp.getId())
-//                            .recipientId(recepientId)
-//                            .content("New Group: " + savedGrp)
-//                            .build());
-//        }
-//        return true;
-//    }
-//
-//    @GetMapping("/messages/{senderId}/{groupId}")
-//    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable("senderId") String senderId, @PathVariable("groupId") String groupId){
-//        return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, groupId));
-//    }
-//
-//    @PutMapping("/admins/{action}")
-//    public void addOrRemoveAdmins(@RequestBody GroupAlterDTO dto, @PathVariable String action) {
-//        if (Objects.equals(action.toLowerCase(), "add")) {
-//            groupChatRoomService.addGroupAdmins(dto);
-//        } else if (Objects.equals(action.toLowerCase(), "remove")) {
-//            groupChatRoomService.removeGroupAdmins(dto);
-//        }
-//    }
 }

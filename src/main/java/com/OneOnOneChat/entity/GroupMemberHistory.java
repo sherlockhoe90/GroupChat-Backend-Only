@@ -19,7 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class GroupMemberHistory {
-//public class GroupMemberHistory extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

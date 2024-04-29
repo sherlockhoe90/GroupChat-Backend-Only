@@ -1,5 +1,7 @@
-package com.OneOnOneChat.entity;
+package com.OneOnOneChat.repo;
 
+import com.OneOnOneChat.entity.GroupChatRoomEntity;
+import com.OneOnOneChat.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
