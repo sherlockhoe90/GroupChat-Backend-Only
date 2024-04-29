@@ -19,6 +19,7 @@ function connect(event) {
     fullname = document.querySelector('#fullname').value.trim();
 
     if (nickname && fullname) {
+        console.log("logged in");
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
@@ -36,10 +37,12 @@ function onConnected() {
     stompClient.subscribe(`/user/public`, onMessageReceived);
 
     // register the connected user
-    stompClient.send("/app/user.addUser",
-        {},
-        JSON.stringify({nickName: nickname, fullName: fullname, status: 'ONLINE'})
-    );
+    // stompClient.send("/app/user.addUser",
+    //     {},
+    //     JSON.stringify({nickName: nickname, fullName: fullname, status: 'ONLINE'})
+    // );
+    testingGroupChatManually1();
+    testingGroupChatManually2();
     document.querySelector('#connected-user-fullname').textContent = fullname;
     findAndDisplayConnectedUsers().then();
 }
@@ -184,7 +187,35 @@ function onLogout() {
     window.location.reload();
 }
 
+var test_user = JSON.stringify(
+    {id : '99', fullName: 'myFullName'}
+);
+var test_group = JSON.stringify(
+    {id: 2, groupName: 'mygroupName'}
+);
+
+function testingGroupChatManually1() {
+    stompClient.send("/app/groupChat",
+        {},
+        JSON.stringify({content: "test message two", senderId : "9", senderFullName: "shubham", groupId : "1", groupName: "test group"})
+    );
+}
+function testingGroupChatManually2() {
+    stompClient.send("/app/groupChat",
+        {},
+        JSON.stringify({content: "test message", senderId : "9", senderFullName: "shubham", groupId : "1", groupName: "test group"})
+    );
+}
+
 usernameForm.addEventListener('submit', connect, true); // step 1
 messageForm.addEventListener('submit', sendMessage, true);
-logout.addEventListener('click', onLogout, true);
+// const messageForm = document.querySelector('#messageForm');
+
+
+// testing manually
+logout.addEventListener('click', testingGroupChatManually1, true);
+logout.addEventListener('submit', testingGroupChatManually1, true);
+logout.addEventListener('click', testingGroupChatManually2, true);
+logout.addEventListener('submit', testingGroupChatManually2, true);
+
 window.onbeforeunload = () => onLogout();

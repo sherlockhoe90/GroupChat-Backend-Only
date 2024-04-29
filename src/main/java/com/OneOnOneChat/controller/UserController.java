@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -18,11 +19,18 @@ public class UserController {
 
     private final UserService service;
 
+    @GetMapping("/")
+//    @GetMapping("/mainPage")
+    public String mainPage(){
+        return "index";
+    }
+
     @MessageMapping("/user.addUser")
     @SendTo("/user/public")
-    public User addUser(@Payload User user){
+    @GetMapping("/user/addUser")
+    public ResponseEntity<User> addUser(@Payload @RequestBody User user){
         service.saveUser(user);
-        return user;
+        return ResponseEntity.ok(user);
     }
 
     @MessageMapping("/user.disconnectUser")
@@ -36,6 +44,8 @@ public class UserController {
     public ResponseEntity<List<User>> findConnectedUser(){
         return ResponseEntity.ok(service.findConnectedUser());
     }
+
+
 
 
 }

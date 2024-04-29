@@ -1,8 +1,9 @@
 package com.OneOnOneChat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
@@ -11,14 +12,33 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document
+//@Document
+@Entity
 public class ChatMessage {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
     private String chatId;
-    private String senderId;
-    private String recipientId;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private GroupChatRoomEntity group;
+
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
+    private User sender;
+    //private String senderId;
+
+    @ManyToOne
+    @JoinColumn(name = "recipient_id")
+    private User recipient;
+    //private String recipientId;
+
     private String content;
     private Date timestamp;
 
+    public GroupChatRoomEntity getGroup() {
+        return group;
+    }
 }
